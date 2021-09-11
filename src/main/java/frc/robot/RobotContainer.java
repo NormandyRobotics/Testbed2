@@ -12,8 +12,6 @@ import frc.robot.commands.Auto1;
 import frc.robot.commands.Auto2;
 import frc.robot.commands.DriveForwardTimed;
 import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.MotorControl;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -38,33 +36,10 @@ public class RobotContainer {
   //sendable chooser declare
   SendableChooser<Command> chooser = new SendableChooser<>();
   
-  /**
- * Initialize value on SmartDashboard for user input, but leave old value if already present.
- *
- * @param key The SmartDashboard key to associate with the value.
- * @param defValue The default value to assign if not already on dashboard.
- *
- * @return The current value that appears on the dashboard.
- */
-public static double createSmartDashboardNumber(String key, double defValue) {
-
-  // See if already on dashboard, and if so, fetch current value
-  double value = SmartDashboard.getNumber(key, defValue);
-
-  // Make sure value is on dashboard, puts back current value if already set
-  // otherwise puts back default value
-  SmartDashboard.putNumber(key, value);
-
-  return value;
-}
+ 
 
 
 
-
-
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -79,8 +54,17 @@ public static double createSmartDashboardNumber(String key, double defValue) {
     driveForwardTimed = new DriveForwardTimed(motorControl);
     driveForwardTimed.addRequirements(motorControl);
 
+    //autonomous
     auto1 = new Auto1();
     auto2 = new Auto2();
+
+      //add choices for auto modes
+      chooser.addOption("Left turn/right turn", auto2);
+      //default choice
+      chooser.addOption("Drive forward", auto1);
+
+      SmartDashboard.putData("Autonomous", chooser);
+    
 
 
 
@@ -88,13 +72,23 @@ public static double createSmartDashboardNumber(String key, double defValue) {
     configureButtonBindings();
   }
 
+  
+  
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  
+  
+   private void configureButtonBindings() {
+
+   }
+
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -102,7 +96,31 @@ public static double createSmartDashboardNumber(String key, double defValue) {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    // call the chooser from SmartDashboard
+    return chooser.getSelected();
   }
+
+
+
+
+   /**
+ * Initialize value on SmartDashboard for user input, but leave old value if already present.
+ *
+ * @param key The SmartDashboard key to associate with the value.
+ * @param defValue The default value to assign if not already on dashboard.
+ *
+ * @return The current value that appears on the dashboard.
+ */
+  public static double createSmartDashboardNumber(String key, double defValue) {
+
+   // See if already on dashboard, and if so, fetch current value
+   double value = SmartDashboard.getNumber(key, defValue);
+
+   // Make sure value is on dashboard, puts back current value if already set
+   // otherwise puts back default value
+   SmartDashboard.putNumber(key, value);
+
+   return value;
+  }
+
 }
